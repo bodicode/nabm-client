@@ -31,6 +31,48 @@ export const useAuth = () => {
         }
     }
 
+    const updateProfile = async (profileData: any) => {
+        if (!token.value) return false
+        const config = useRuntimeConfig()
+
+        try {
+            await $fetch('/users/profile', {
+                method: 'PATCH',
+                baseURL: config.public.apiBase,
+                headers: {
+                    Authorization: `Bearer ${token.value}`
+                },
+                body: profileData
+            })
+            // Fetch the updated user data
+            await fetchUser()
+            return true
+        } catch (e) {
+            console.error('Error updating profile', e)
+            throw e
+        }
+    }
+
+    const changePassword = async (currentPassword: string, newPassword: string) => {
+        if (!token.value) return false
+        const config = useRuntimeConfig()
+
+        try {
+            await $fetch('/users/change-password', {
+                method: 'PATCH',
+                baseURL: config.public.apiBase,
+                headers: {
+                    Authorization: `Bearer ${token.value}`
+                },
+                body: { currentPassword, newPassword }
+            })
+            return true
+        } catch (e) {
+            console.error('Error changing password', e)
+            throw e
+        }
+    }
+
     const logout = () => {
         user.value = null
         setToken(null)
@@ -58,6 +100,8 @@ export const useAuth = () => {
         setToken,
         fetchUser,
         logout,
-        initAuth
+        initAuth,
+        updateProfile,
+        changePassword
     }
 }

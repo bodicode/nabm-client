@@ -14,7 +14,7 @@
       <div class="cta-actions">
         <ThemeToggle />
         <template v-if="user">
-          <span class="user-greeting">Hi, {{ user.name }}</span>
+          <NuxtLink to="/profile" class="user-greeting">Hi, {{ user.name }}</NuxtLink>
           <button @click="logout" class="btn btn-outline small">Đăng Xuất</button>
         </template>
         <template v-else>
