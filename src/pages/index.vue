@@ -42,6 +42,15 @@
         />
       </div>
     </section>
+    
+    <!-- Partner Teaser -->
+    <section class="section container partner-banner">
+      <div class="banner-content">
+        <h2>Bạn Đang Quản Lý Sân Bóng?</h2>
+        <p>Tham gia hệ thống đối tác của 3hours để tối ưu doanh thu và quản lý lịch đặt sân dễ dàng hơn.</p>
+        <NuxtLink to="/partner-registration" class="btn btn-primary big banner-btn">Đăng Ký Đối Tác Ngay</NuxtLink>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -227,5 +236,45 @@ const teams = [
   .hero-title {
     font-size: 3rem;
   }
+}
+
+.partner-banner {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 87, 34, 0.1) 100%);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  padding: 4rem 2rem;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+:global([data-theme="light"]) .partner-banner {
+  background: linear-gradient(135deg, #f9f9f9 0%, rgba(255, 87, 34, 0.05) 100%);
+  border-color: #eee;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+}
+
+.partner-banner h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.partner-banner p {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.banner-btn {
+  display: inline-block;
 }
 </style>

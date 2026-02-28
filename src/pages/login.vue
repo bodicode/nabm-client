@@ -82,7 +82,23 @@ const router = useRouter()
 
 const config = useRuntimeConfig()
 const route = useRoute()
-const { setToken, fetchUser } = useAuth()
+const { setToken, fetchUser, user } = useAuth()
+
+
+const checkNewUser = () => {
+  if (process.client) {
+    const hasOnboarded = localStorage.getItem('has_onboarded')
+    if (hasOnboarded) return false
+    
+    // Check if user was created within the last 1 hour
+    if (user.value?.createdAt) {
+      const createdTime = new Date(user.value.createdAt).getTime()
+      const now = new Date().getTime()
+      return (now - createdTime) < 60 * 60 * 1000 // 1 hour
+    }
+  }
+  return false
+}
 
 
 const googleLoginUrl = computed(() => {
@@ -94,7 +110,11 @@ onMounted(async () => {
   if (token) {
     setToken(token as string)
     await fetchUser()
-    window.location.href = '/' 
+    if (checkNewUser()) {
+      window.location.href = '/onboarding'
+    } else {
+      window.location.href = '/' 
+    }
   }
 })
 
@@ -115,7 +135,11 @@ const handleLogin = async () => {
       console.log('Login success:', data.value)
       setToken(data.value.access_token)
       await fetchUser()
-      router.push('/')
+      if (checkNewUser()) {
+        router.push('/onboarding')
+      } else {
+        router.push('/')
+      }
     }
   } catch (err) {
     console.error(err)
