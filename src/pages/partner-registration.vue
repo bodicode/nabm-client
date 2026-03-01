@@ -10,12 +10,8 @@
       <!-- Progress Bar -->
       <div class="progress-container">
         <div class="progress-steps">
-          <div 
-            v-for="step in 4" 
-            :key="step"
-            class="step"
-            :class="{ active: currentStep === step, completed: currentStep > step }"
-          >
+          <div v-for="step in 4" :key="step" class="step"
+            :class="{ active: currentStep === step, completed: currentStep > step }">
             <div class="step-circle">{{ step }}</div>
             <div class="step-label">{{ stepLabels[step - 1] }}</div>
           </div>
@@ -26,24 +22,23 @@
       </div>
 
       <div class="form-card">
-        <form @submit.prevent="submitForm">
-          
+        <form @submit.prevent>
+
           <!-- STEP 1: Basic Info -->
           <div v-show="currentStep === 1" class="step-content">
             <h2 class="step-title">Thông tin cơ bản</h2>
-            
+
             <div class="form-group">
               <label>Tên sân bóng <span class="required">*</span></label>
-              <input type="text" v-model="formData.name" placeholder="Ví dụ: Downtown Hoops Center" class="form-input" required />
+              <input type="text" v-model="formData.name" placeholder="Ví dụ: Downtown Hoops Center" class="form-input"
+                required />
             </div>
 
             <div class="grid-2">
               <div class="form-group">
                 <label>Loại thể thao</label>
-                <select v-model="formData.sportType" class="form-input">
+                <select v-model="formData.sportType" class="form-input" disabled>
                   <option value="Basketball">Bóng rổ</option>
-                  <option value="Football">Bóng đá</option>
-                  <option value="Volleyball">Bóng chuyền</option>
                 </select>
               </div>
               <div class="form-group">
@@ -73,8 +68,14 @@
 
             <div class="grid-2">
               <div class="form-group">
-                <label>Kích thước (D x R)</label>
-                <input type="text" v-model="formData.dimensions" placeholder="Ví dụ: 28m x 15m" class="form-input" />
+                <label>Kích thước (m)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="number" v-model="dimensions.length" placeholder="Dài" class="form-input"
+                    style="width: 50%" />
+                  <span>x</span>
+                  <input type="number" v-model="dimensions.width" placeholder="Rộng" class="form-input"
+                    style="width: 50%" />
+                </div>
               </div>
               <div class="form-group checkbox-group">
                 <label class="toggle-label">
@@ -88,10 +89,11 @@
           <!-- STEP 2: Location & Contact -->
           <div v-show="currentStep === 2" class="step-content">
             <h2 class="step-title">Vị trí & Liên hệ</h2>
-            
+
             <div class="form-group">
               <label>Địa chỉ cụ thể <span class="required">*</span></label>
-              <input type="text" v-model="formData.address" placeholder="123 Main St, Phường X..." class="form-input" required />
+              <input type="text" v-model="formData.address" placeholder="123 Main St, Phường X..." class="form-input"
+                required />
             </div>
 
             <div class="grid-2">
@@ -111,7 +113,8 @@
               </div>
               <div class="form-group">
                 <label>Tên người quản lý</label>
-                <input type="text" v-model="formData.managerName" :placeholder="user?.name || 'Nguyễn Văn A'" class="form-input" />
+                <input type="text" v-model="formData.managerName" :placeholder="user?.name || 'Nguyễn Văn A'"
+                  class="form-input" />
               </div>
             </div>
 
@@ -122,7 +125,8 @@
               </div>
               <div class="form-group">
                 <label>Email liên hệ</label>
-                <input type="email" v-model="formData.email" :placeholder="user?.email || 'manager@court.com'" class="form-input" />
+                <input type="email" v-model="formData.email" :placeholder="user?.email || 'manager@court.com'"
+                  class="form-input" />
               </div>
             </div>
 
@@ -139,7 +143,7 @@
           <!-- STEP 3: Facilities & Media -->
           <div v-show="currentStep === 3" class="step-content">
             <h2 class="step-title">Hình ảnh & Tiện ích</h2>
-            
+
             <div class="form-group">
               <label>Tiện ích có sẵn (Chọn nhiều)</label>
               <div class="facilities-grid">
@@ -152,20 +156,26 @@
 
             <div class="form-group">
               <label>Mô tả tổng quan về sân</label>
-              <textarea v-model="formData.description" rows="3" placeholder="Nhập mô tả ngắn gọn..." class="form-input"></textarea>
+              <textarea v-model="formData.description" rows="3" placeholder="Nhập mô tả ngắn gọn..."
+                class="form-input"></textarea>
             </div>
 
             <div class="form-group">
               <label>Hình ảnh sân (Tải lên nhiều ảnh) <span class="required">*</span></label>
-              <input type="file" multiple accept="image/*" @change="handleImageUpload" class="form-input" style="padding: 9px;" required />
-              <div v-if="formData.images.length > 0" class="input-hint" style="margin-top: 0.5rem;">
-                Đã chọn {{ formData.images.length }} ảnh.
+              <input type="file" multiple accept="image/*" @change="handleImageUpload" class="form-input"
+                style="padding: 9px;" required />
+              <div v-if="formData.images.length > 0" class="image-preview-container">
+                <div v-for="(img, idx) in imagePreviews" :key="idx" class="image-preview">
+                  <img :src="img" alt="Preview" />
+                  <button type="button" class="remove-btn" @click="removeImage(idx)">×</button>
+                </div>
               </div>
             </div>
-            
+
             <div class="form-group">
               <label>Video giới thiệu sân (Tải lên 1 video file)</label>
-              <input type="file" accept="video/*" @change="handleVideoUpload" class="form-input" style="padding: 9px;" />
+              <input type="file" accept="video/*" @change="handleVideoUpload" class="form-input"
+                style="padding: 9px;" />
               <div v-if="formData.video" class="input-hint" style="margin-top: 0.5rem;">
                 Đã chọn video: {{ formData.video.name }}
               </div>
@@ -175,11 +185,12 @@
           <!-- STEP 4: Pricing & Policies -->
           <div v-show="currentStep === 4" class="step-content">
             <h2 class="step-title">Bảng giá & Chính sách</h2>
-            
+
             <div class="grid-2">
               <div class="form-group">
                 <label>Giá mỗi giờ (VNĐ) <span class="required">*</span></label>
-                <input type="number" v-model.number="formData.pricePerHour" placeholder="100000" class="form-input" required />
+                <input type="text" :value="formattedPrice" @input="updatePrice" placeholder="100,000" class="form-input"
+                  required />
               </div>
               <div class="form-group">
                 <label>Yêu cầu đặt cọc</label>
@@ -199,37 +210,24 @@
 
             <div class="form-group">
               <label>Chính sách hủy sân</label>
-              <textarea v-model="formData.cancellationPolicy" rows="2" placeholder="Ví dụ: Hủy trước 24h hoàn tiền 100%..." class="form-input"></textarea>
+              <textarea v-model="formData.cancellationPolicy" rows="2"
+                placeholder="Ví dụ: Hủy trước 24h hoàn tiền 100%..." class="form-input"></textarea>
             </div>
           </div>
 
           <!-- Navigation Buttons -->
           <div class="form-actions">
-            <button 
-              type="button" 
-              class="btn btn-outline" 
-              @click="prevStep" 
-              v-show="currentStep > 1"
-            >
+            <button type="button" class="btn btn-outline" @click="prevStep" v-show="currentStep > 1">
               &larr; Quay lại
             </button>
             <div style="flex: 1"></div>
-            
-            <button 
-              type="button" 
-              class="btn btn-primary" 
-              @click="nextStep" 
-              v-show="currentStep < 4"
-            >
+
+            <button type="button" class="btn btn-primary" @click="nextStep" v-show="currentStep < 4">
               Tiếp tục &rarr;
             </button>
-            
-            <button 
-              type="submit" 
-              class="btn btn-accent" 
-              v-show="currentStep === 4"
-              :disabled="loading"
-            >
+
+            <button type="button" class="btn btn-accent" @click="submitForm" v-show="currentStep === 4"
+              :disabled="loading">
               {{ loading ? 'Đang gửi...' : 'Hoàn tất Đăng ký' }}
             </button>
           </div>
@@ -249,7 +247,8 @@ const stepLabels = ['Thông tin', 'Vị trí', 'Tiện ích', 'Bảng giá']
 const loading = ref(false)
 
 const availableFacilities = [
-  'Lighting', 'Roof', 'Water dispenser', 'Parking', 'WiFi', 'Locker', 'Toilet', 'Canteen'
+  'Đèn chiếu sáng (Lighting)', 'Có mái che (Roof)', 'Nước uống (Water dispenser)',
+  'Bãi giữ xe (Parking)', 'WiFi', 'Tủ đồ (Locker)', 'Nhà vệ sinh (Toilet)', 'Căn tin (Canteen)'
 ]
 
 const availablePaymentMethods = [
@@ -288,11 +287,47 @@ const formData = reactive({
   video: null as File | null
 })
 
+const dimensions = reactive({ length: null as number | null, width: null as number | null })
+const imagePreviews = ref<string[]>([])
+
+const formattedPrice = computed(() => {
+  if (!formData.pricePerHour) return ''
+  return new Intl.NumberFormat('vi-VN').format(formData.pricePerHour)
+})
+
+const updatePrice = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const val = target.value.replace(/\D/g, '') // remove non-digits
+  formData.pricePerHour = val ? parseInt(val, 10) : 0
+  // keep the input value synced for formatting on input
+  target.value = new Intl.NumberFormat('vi-VN').format(formData.pricePerHour)
+}
+
 const handleImageUpload = (event: Event) => {
   const target = event.target as HTMLInputElement
   if (target.files) {
-    formData.images = Array.from(target.files)
+    const newFiles = Array.from(target.files)
+    formData.images = [...formData.images, ...newFiles]
+
+    // Create previews
+    newFiles.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          imagePreviews.value.push(e.target.result as string)
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+
+    // reset input so same files can be selected again if needed
+    target.value = ''
   }
+}
+
+const removeImage = (idx: number) => {
+  formData.images.splice(idx, 1)
+  imagePreviews.value.splice(idx, 1)
 }
 
 const handleVideoUpload = (event: Event) => {
@@ -314,15 +349,26 @@ const prevStep = () => {
 }
 
 const submitForm = async () => {
+  if (!formData.name || !formData.address || !formData.phoneNumber || formData.images.length === 0) {
+    alert('Vui lòng điền đầy đủ các thông tin bắt buộc (Tên sân, Địa chỉ, SĐT, tối thiểu 1 Hình ảnh).')
+    return
+  }
+
   loading.value = true
-  
+
   const submitData = new FormData()
-  
+
   // Append basic fields
   Object.keys(formData).forEach(key => {
     if (['images', 'video', 'facilities', 'paymentMethods'].includes(key)) return;
-    
-    const value = (formData as any)[key]
+
+    let value = (formData as any)[key]
+
+    // Format dimensions before saving
+    if (key === 'dimensions') {
+      value = dimensions.length && dimensions.width ? `${dimensions.length}m x ${dimensions.width}m` : ''
+    }
+
     if (value !== null && value !== undefined && value !== '') {
       submitData.append(key, value.toString())
     }
@@ -332,7 +378,7 @@ const submitForm = async () => {
   formData.facilities.forEach(item => {
     submitData.append('facilities[]', item)
   })
-  
+
   formData.paymentMethods.forEach(item => {
     submitData.append('paymentMethods[]', item)
   })
@@ -341,11 +387,11 @@ const submitForm = async () => {
   formData.images.forEach(file => {
     submitData.append('images', file) // append single parameter multiple times creates array of files on backend
   })
-  
+
   if (formData.video) {
     submitData.append('video', formData.video)
   }
-  
+
   try {
     const { data, error } = await useApi('/courts', {
       method: 'POST',
@@ -510,8 +556,15 @@ const submitForm = async () => {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .step-title {
@@ -642,7 +695,8 @@ textarea.form-input {
 }
 
 .btn-accent:hover {
-  background-color: #2AAA46; /* slightly darker green */
+  background-color: #2AAA46;
+  /* slightly darker green */
 }
 
 .btn-accent:disabled {
@@ -655,13 +709,58 @@ textarea.form-input {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  
+
   .form-card {
     padding: 1.5rem;
   }
-  
+
   .progress-label {
     display: none;
   }
+}
+
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--bg-tertiary);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.remove-btn:hover {
+  background-color: var(--color-primary);
 }
 </style>

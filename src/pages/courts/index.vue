@@ -11,24 +11,19 @@
     </div>
 
     <div class="grid-cols-3">
-      <CourtCard 
-        v-for="court in courts" 
-        :key="court.id"
-        v-bind="court"
-      />
+      <div v-if="pending" class="text-center w-full py-8 text-secondary">Đang tải danh sách sân...</div>
+      <div v-else-if="error" class="text-center w-full py-8 text-accent">Lỗi tải dữ liệu. Vui lòng thử lại.</div>
+      <CourtCard v-else v-for="court in courts" :key="court.id" :id="court.id" :name="court.name"
+        :location="court.address || 'Đang cập nhật'" :price="court.pricePerHour ? court.pricePerHour + 'k' : 'Liên hệ'"
+        :rating="court.rating || 0"
+        :image="court.images?.[0] || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=800'"
+        :tags="court.facilities || []" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const courts = [
-  { id: 1, name: "Downtown Hoops Center", location: "District 1, HCMC", price: "200k", rating: 4.8, image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=800", tags: ["Indoor", "Air Con"] },
-  { id: 2, name: "Streetball Park A", location: "District 7, HCMC", price: "150k", rating: 4.5, image: "https://images.unsplash.com/photo-1505666287802-931dc83948e9?auto=format&fit=crop&q=80&w=800", tags: ["Outdoor", "Lighting"] },
-  { id: 3, name: "Elite Sports Complex", location: "Thu Duc City", price: "300k", rating: 5.0, image: "https://images.unsplash.com/photo-1533591380348-14193f1de18f?auto=format&fit=crop&q=80&w=800", tags: ["Indoor", "Premium"] },
-  { id: 4, name: "Community Center", location: "District 3, HCMC", price: "100k", rating: 4.0, image: "https://images.unsplash.com/photo-1519861531473-920026393112?auto=format&fit=crop&q=80&w=800", tags: ["Outdoor"] },
-  { id: 5, name: "Pro Arena", location: "Binh Thanh", price: "250k", rating: 4.9, image: "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&q=80&w=800", tags: ["Indoor", "Pro Floor"] },
-  { id: 6, name: "Sunset Courts", location: "District 2", price: "180k", rating: 4.6, image: "https://images.unsplash.com/photo-1525916801717-9406bcfdf9f0?auto=format&fit=crop&q=80&w=800", tags: ["Outdoor", "View"] },
-]
+const { data: courts, pending, error } = await useApi<any[]>('/courts')
 </script>
 
 <style scoped>

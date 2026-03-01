@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="container hero-content">
-        <h1 class="hero-title">CHINH PHỤC <br/><span class="text-accent">SÂN ĐẤU</span></h1>
+        <h1 class="hero-title">CHINH PHỤC <br /><span class="text-accent">SÂN ĐẤU</span></h1>
         <p class="hero-subtitle">Tìm sân, cáp kèo và nâng tầm cuộc chơi với nền tảng bóng rổ cộng đồng hàng đầu.</p>
         <div class="hero-actions">
           <NuxtLink to="/courts" class="btn btn-primary big">Đặt Sân Ngay</NuxtLink>
@@ -13,18 +13,19 @@
       <div class="hero-overlay"></div>
     </section>
 
-    <!-- Trending Courts -->
     <section class="section container">
       <div class="section-header">
         <h2>Sân Đang Hot</h2>
         <NuxtLink to="/courts" class="link-more">Xem Tất Cả &rarr;</NuxtLink>
       </div>
       <div class="grid-cols-3">
-        <CourtCard 
-          v-for="court in courts" 
-          :key="court.id"
-          v-bind="court"
-        />
+        <div v-if="pendingCourts" class="text-center w-full py-8 text-secondary">Đang tải danh sách sân...</div>
+        <div v-else-if="errorCourts" class="text-center w-full py-8 text-accent">Lỗi tải dữ liệu.</div>
+        <CourtCard v-else v-for="court in courts?.slice(0, 3)" :key="court.id" :id="court.id" :name="court.name"
+          :location="court.address || 'Đang cập nhật'"
+          :price="court.pricePerHour ? court.pricePerHour + 'k' : 'Liên hệ'" :rating="court.rating || 0"
+          :image="court.images?.[0] || 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=800'"
+          :tags="court.facilities || []" />
       </div>
     </section>
 
@@ -35,14 +36,10 @@
         <NuxtLink to="/matchmaking" class="link-more">Vào Sảnh Chờ &rarr;</NuxtLink>
       </div>
       <div class="grid-cols-3">
-        <TeamCard 
-          v-for="team in teams"
-          :key="team.id"
-          v-bind="team"
-        />
+        <TeamCard v-for="team in teams" :key="team.id" v-bind="team" />
       </div>
     </section>
-    
+
     <!-- Partner Teaser -->
     <section class="section container partner-banner">
       <div class="banner-content">
@@ -55,37 +52,9 @@
 </template>
 
 <script setup lang="ts">
-// Mock Data
-const courts = [
-  {
-    id: 1,
-    name: "Downtown Hoops Center",
-    location: "District 1, HCMC",
-    price: "200k",
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=800",
-    tags: ["Indoor", "Air Con"]
-  },
-  {
-    id: 2,
-    name: "Streetball Park A",
-    location: "District 7, HCMC",
-    price: "150k",
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1505666287802-931dc83948e9?auto=format&fit=crop&q=80&w=800",
-    tags: ["Outdoor", "Lighting"]
-  },
-  {
-    id: 3,
-    name: "Elite Sports Complex",
-    location: "Thu Duc City",
-    price: "300k",
-    rating: 5.0,
-    image: "https://images.unsplash.com/photo-1533591380348-14193f1de18f?auto=format&fit=crop&q=80&w=800",
-    tags: ["Indoor", "Premium"]
-  }
-]
+const { data: courts, pending: pendingCourts, error: errorCourts } = await useApi<any[]>('/courts')
 
+// Mock Data
 const teams = [
   {
     id: 1,
@@ -120,7 +89,8 @@ const teams = [
   position: relative;
   display: flex;
   align-items: center;
-  background-image: url('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2090&auto=format&fit=crop'); /* Dark Mode: Indoor Action */
+  background-image: url('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2090&auto=format&fit=crop');
+  /* Dark Mode: Indoor Action */
   background-size: cover;
   background-position: center;
   color: #FFFFFF;
@@ -132,26 +102,25 @@ const teams = [
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to right, 
-    rgba(6, 6, 6, 0.95) 0%, 
-    rgba(6, 6, 6, 0.7) 40%, 
-    rgba(255, 87, 34, 0.1) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(6, 6, 6, 0.95) 0%,
+      rgba(6, 6, 6, 0.7) 40%,
+      rgba(255, 87, 34, 0.1) 100%);
   z-index: 1;
 }
 
 /* Light Theme Overrides */
 :global([data-theme="light"]) .hero {
-  background-image: url('https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&q=80&w=2000'); /* Light Mode: Bright/Indoor/Community */
+  background-image: url('https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&q=80&w=2000');
+  /* Light Mode: Bright/Indoor/Community */
   color: #121212;
 }
 
 :global([data-theme="light"]) .hero-overlay {
-  background: linear-gradient(to right, 
-    rgba(240, 240, 240, 0.95) 0%, 
-    rgba(240, 240, 240, 0.8) 40%, 
-    rgba(255, 255, 255, 0.2) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(240, 240, 240, 0.95) 0%,
+      rgba(240, 240, 240, 0.8) 40%,
+      rgba(255, 255, 255, 0.2) 100%);
 }
 
 :global([data-theme="light"]) .hero-title {
@@ -188,7 +157,7 @@ const teams = [
   text-transform: uppercase;
   font-style: italic;
   font-weight: 900;
-  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
@@ -197,7 +166,7 @@ const teams = [
   max-width: 600px;
   margin-bottom: var(--spacing-2xl);
   font-weight: 400;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .hero-actions {

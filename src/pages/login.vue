@@ -6,7 +6,7 @@
         <NuxtLink to="/" class="auth-logo">
           3hours<span class="text-accent">.</span>
         </NuxtLink>
-        
+
         <header class="auth-header">
           <h1 class="auth-title">Chào mừng trở lại!</h1>
           <p class="auth-subtitle">Nhập thông tin để tiếp tục trận đấu của bạn.</p>
@@ -20,7 +20,7 @@
               <input type="email" v-model="email" placeholder="name@example.com" class="form-input" required />
             </div>
           </div>
-          
+
           <div class="form-group fade-in-2">
             <label>Mật Khẩu</label>
             <div class="input-wrapper">
@@ -31,7 +31,7 @@
 
           <div class="form-actions fade-in-3">
             <label class="checkbox-label">
-              <input type="checkbox" /> 
+              <input type="checkbox" />
               <span>Ghi nhớ tôi</span>
             </label>
             <a href="#" class="forgot-password">Quên mật khẩu?</a>
@@ -46,7 +46,7 @@
           <div class="divider"><span>Hoặc đăng nhập với</span></div>
           <div class="social-buttons">
             <a :href="googleLoginUrl" class="social-btn google">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="24"/>
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="24" />
               Login with Google
             </a>
           </div>
@@ -89,7 +89,7 @@ const checkNewUser = () => {
   if (process.client) {
     const hasOnboarded = localStorage.getItem('has_onboarded')
     if (hasOnboarded) return false
-    
+
     // Check if user was created within the last 1 hour
     if (user.value?.createdAt) {
       const createdTime = new Date(user.value.createdAt).getTime()
@@ -113,7 +113,7 @@ onMounted(async () => {
     if (checkNewUser()) {
       window.location.href = '/onboarding'
     } else {
-      window.location.href = '/' 
+      window.location.href = '/'
     }
   }
 })
@@ -166,7 +166,8 @@ const handleLogin = async () => {
 
 /* Form Panel Styling */
 .form-panel {
-  max-width: 600px; /* Force it to not be too wide */
+  max-width: 600px;
+  /* Force it to not be too wide */
   padding: 4rem;
   background-color: var(--bg-primary);
 }
@@ -227,7 +228,8 @@ const handleLogin = async () => {
 
 .form-input {
   width: 100%;
-  padding: 12px 16px 12px 42px; /* Space for icon */
+  padding: 12px 16px 12px 42px;
+  /* Space for icon */
   border-radius: var(--radius-md);
   border: 1px solid var(--bg-tertiary);
   background-color: var(--bg-secondary);
@@ -283,7 +285,8 @@ const handleLogin = async () => {
   font-size: 0.875rem;
 }
 
-.divider::before, .divider::after {
+.divider::before,
+.divider::after {
   content: '';
   flex: 1;
   border-bottom: 1px solid var(--bg-tertiary);
@@ -338,7 +341,7 @@ const handleLogin = async () => {
 }
 
 .image-overlay {
-  background: linear-gradient(135deg, rgba(18,18,18,0.8), rgba(255,87,34,0.4));
+  background: linear-gradient(135deg, rgba(18, 18, 18, 0.8), rgba(255, 87, 34, 0.4));
   width: 100%;
   height: 100%;
   display: flex;
@@ -356,7 +359,7 @@ const handleLogin = async () => {
 }
 
 .quote-container cite {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   font-style: normal;
   font-weight: 600;
   font-size: 1.1rem;
@@ -367,9 +370,10 @@ const handleLogin = async () => {
   .auth-split-layout {
     flex-direction: column;
   }
-  
+
   .image-panel {
-    display: none; /* Hide image on mobile for simpler view, or reduce height */
+    display: none;
+    /* Hide image on mobile for simpler view, or reduce height */
   }
 
   .form-panel {
@@ -380,14 +384,44 @@ const handleLogin = async () => {
 
 /* Animations */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.fade-in-1 { animation: fadeInUp 0.5s ease forwards 0.1s; opacity: 0; }
-.fade-in-2 { animation: fadeInUp 0.5s ease forwards 0.2s; opacity: 0; }
-.fade-in-3 { animation: fadeInUp 0.5s ease forwards 0.3s; opacity: 0; }
-.fade-in-4 { animation: fadeInUp 0.5s ease forwards 0.4s; opacity: 0; }
-.fade-in-5 { animation: fadeInUp 0.5s ease forwards 0.5s; opacity: 0; }
-.fade-in-6 { animation: fadeInUp 0.5s ease forwards 0.6s; opacity: 0; }
+.fade-in-1 {
+  animation: fadeInUp 0.5s ease forwards 0.1s;
+  opacity: 0;
+}
+
+.fade-in-2 {
+  animation: fadeInUp 0.5s ease forwards 0.2s;
+  opacity: 0;
+}
+
+.fade-in-3 {
+  animation: fadeInUp 0.5s ease forwards 0.3s;
+  opacity: 0;
+}
+
+.fade-in-4 {
+  animation: fadeInUp 0.5s ease forwards 0.4s;
+  opacity: 0;
+}
+
+.fade-in-5 {
+  animation: fadeInUp 0.5s ease forwards 0.5s;
+  opacity: 0;
+}
+
+.fade-in-6 {
+  animation: fadeInUp 0.5s ease forwards 0.6s;
+  opacity: 0;
+}
 </style>

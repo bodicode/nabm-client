@@ -1,5 +1,5 @@
 <template>
-  <div class="court-card">
+  <NuxtLink :to="`/courts/${id}`" class="court-card block no-underline text-inherit">
     <div class="card-image">
       <img :src="image" :alt="name" />
       <div class="price-tag">{{ price }}/h</div>
@@ -15,9 +15,9 @@
       <div class="tags">
         <span v-for="tag in tags" :key="tag" class="tag">{{ tag }}</span>
       </div>
-      <NuxtLink :to="`/courts/${id}`" class="btn btn-primary full-width">Book Now</NuxtLink>
+      <button class="btn btn-primary full-width">Book Now</button>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">
@@ -34,11 +34,15 @@ defineProps<{
 
 <style scoped>
 .court-card {
+  display: flex;
+  flex-direction: column;
   background-color: var(--bg-secondary);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: transform 0.2s;
   border: 1px solid var(--bg-tertiary);
+  text-decoration: none;
+  color: inherit;
 }
 
 .court-card:hover {
@@ -49,7 +53,8 @@ defineProps<{
 .card-image {
   height: 200px;
   position: relative;
-  background-color: var(--bg-tertiary); /* Placeholder color */
+  background-color: var(--bg-tertiary);
+  /* Placeholder color */
 }
 
 .card-image img {
@@ -62,7 +67,7 @@ defineProps<{
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   padding: 4px 8px;
   border-radius: var(--radius-sm);
   font-weight: bold;
